@@ -1,0 +1,25 @@
+<%- include("./partials/nav.ejs") %>
+
+  <body>
+
+    SMHJLS LKWHJ LH LHF
+
+    <div class="blogs content">
+      <h2>All Blogss</h2>
+      <% if (blogs.length> 0) {
+        blogs.forEach(blog => { %>
+        <h3>
+          <%=blog.title%>
+        </h3>
+
+        <p>
+          <%= blog.snippet %>
+        </p>
+        <% })} else{%>
+          <h3>"NOTHING"</h3>
+          <%}%>
+    </div>
+  </body>
+
+
+  </html>

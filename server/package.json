@@ -1,0 +1,24 @@
+{
+  "name": "liveeee",
+  "version": "1.0.0",
+  "description": "exxx",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "fastify": "^5.2.1",
+    "lodash": "^4.17.21",
+    "mongodb": "^6.12.0",
+    "mongoose": "^8.9.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.13.1"
+  }
+}

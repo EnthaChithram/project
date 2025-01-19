@@ -1,0 +1,51 @@
+const buildNestedComments = (comments, parentId = null) => {
+    const nestedComments = [];
+
+    const filteredComments = comments.filter(comment => comment.parentid === parentId);
+
+    for (const comment of filteredComments) {
+        const children = buildNestedComments(comments, comment._id);
+        nestedComments.push({
+            ...comment,
+            children,
+        });
+    }
+
+    return nestedComments;
+};
+
+
+
+
+//rendering
+
+import React from "react";
+
+const CommentList = ({ comments }) => {
+    // Recursive function to render comments and their children
+    const renderComments = (comments) => {
+        return comments.map((comment) => (
+            <div key={comment._id} style={{ marginLeft: comment.parentid ? "20px" : "0px", borderLeft: comment.parentid ? "1px solid #ccc" : "none", paddingLeft: "10px" }}>
+                <p><strong>{comment.name}</strong>: {comment.text}</p>
+                {/* Render children if they exist */}
+                {comment.children && comment.children.length > 0 && (
+                    <div>{renderComments(comment.children)}</div>
+                )}
+            </div>
+        ));
+    };
+
+    return (
+        <div>
+            <h2>Comments</h2>
+            {comments && comments.length > 0 ? (
+                renderComments(comments)
+            ) : (
+                <p>No comments yet.</p>
+            )}
+        </div>
+    );
+};
+
+export default CommentList;
+

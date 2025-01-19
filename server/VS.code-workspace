@@ -1,0 +1,55 @@
+{
+	"folders": [
+		{
+			"name": "VS",
+			"path": "../../VS"
+		},
+		{
+			"name": "gitttt",
+			"path": "../../gitttt"
+		},
+		{
+			"name": "vite-project",
+			"path": "C:/Users/PawaN/vite-project"
+		},
+		{
+			"name": "liveeee",
+			"path": "."
+		},
+		{
+			"name": "studenttt",
+			"path": "../../student reg/studenttt"
+		},
+		{
+			"name": "Supabase-Tutorial-for-Beginners-starter-project",
+			"path": "C:/Users/PawaN/Desktop/Supabase-Tutorial-for-Beginners-starter-project"
+		},
+		{
+			"name": "mango",
+			"path": "../../mango"
+		},
+		{
+			"name": "nested-comments",
+			"path": "../../nested-comments"
+		},
+		{
+			"name": "z-follow-nes",
+			"path": "../../z-follow-nes"
+		},
+		{
+			"name": "zz-agian",
+			"path": "../../zz-agian"
+		},
+		{
+			"name": "project",
+			"path": "../project"
+		},
+		{
+			"name": "rrreacttt",
+			"path": "../rrreacttt"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "vite-project"
+	}
+}

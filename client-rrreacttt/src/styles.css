@@ -1,0 +1,13 @@
+.first {
+  margin-left: 20px;
+  border-left: 20px;
+  padding-left: 20px;
+}
+
+.second {
+  margin-left: 20px;
+  border-left: 20px solid #be0f84;
+  border-radius: 5px;
+  padding-left: 20px;
+  color: blueviolet;
+}
