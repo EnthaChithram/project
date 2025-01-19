@@ -20,11 +20,8 @@ function App() {
         <Routes>
 
 
-          <Route path="/blogs/:id" element={<Blogdetails />}></Route>
-
-          <Route path="/create" element={<Create />}></Route>
           <Route path="/" element={<Movies />}></Route>
-          <Route path="/mongocomments" element={<Mongocomments />}></Route>
+
           <Route path="/movies" element={<Movies />}></Route>
           <Route path="/movies/:id" element={<Moviepage />}></Route>
 

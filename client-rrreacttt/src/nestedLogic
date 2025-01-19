@@ -17,17 +17,17 @@ const buildNestedComments = (comments, parentId = null) => {
 
 
 
-//rendering
+//renderng
 
 import React from "react";
 
 const CommentList = ({ comments }) => {
-    // Recursive function to render comments and their children
+
     const renderComments = (comments) => {
         return comments.map((comment) => (
             <div key={comment._id} style={{ marginLeft: comment.parentid ? "20px" : "0px", borderLeft: comment.parentid ? "1px solid #ccc" : "none", paddingLeft: "10px" }}>
                 <p><strong>{comment.name}</strong>: {comment.text}</p>
-                {/* Render children if they exist */}
+
                 {comment.children && comment.children.length > 0 && (
                     <div>{renderComments(comment.children)}</div>
                 )}

@@ -8,18 +8,7 @@ const useFetch = (url) => {
 
   ]);
 
-  const [comments, SetComments] = useState([
-    {
-      text: "ofdhgdfk ok ok",
-      likes: 2453,
-      replies: [
-        { text2: "nononon" },
-        { text2: "fg fhg" },
-        { text2: "4fvgvfgv" },
-      ],
-      id: 445,
-    },
-  ]);
+
 
 
   useEffect(() => {
