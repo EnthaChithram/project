@@ -4,11 +4,6 @@ const express = require("express");
 
 const app = express();
 const mongoose = require("mongoose");
-const Blog = require("./blog");
-const Comment = require("./comment");
-
-const pool = require("./db");
-
 
 
 const Commentu = require("./commentu")
