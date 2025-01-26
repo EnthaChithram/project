@@ -8,7 +8,7 @@ import { formatDistanceToNow } from "date-fns";
 import { AuthContext } from "./context/AuthContext";
 
 const Commentsection = ({ movie, selected }) => {
-  const { comments, dispatch } = useCommentsContext();
+  const { comments, dispatch, isReplying } = useCommentsContext();
 
   const [cc, setcc] = useState(null);
   const [view, setView] = useState(true);
@@ -17,23 +17,28 @@ const Commentsection = ({ movie, selected }) => {
 
   const handleReply = (id) => {
     if (cc === id) {
-      setView(!view);
+      dispatch({ type: isReplying ? "reply_off" : "reply_on" });
     } else {
       setcc(id);
-      setView(true);
+      dispatch({ type: "reply_on" });
     }
   };
 
-  const handleDelete = (id) => {
-    fetch("http://localhost:3000/commentu/" + id, {
+  const handleDelete = async (id, childrenlength) => {
+    if (childrenlength === 0) {
+      dispatch({ type: "delete_comment", payload: id });
+    } else {
+      dispatch({ type: "update", payload: id });
+    }
+
+    const response = await fetch("http://localhost:3000/commentu/" + id, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ` + user.token,
       },
-    }).then((res) => {
-      console.log(res);
-      window.location.reload();
     });
+
+    const json = await response.json();
   };
 
   const renderComments = (comments) => {
@@ -47,7 +52,7 @@ const Commentsection = ({ movie, selected }) => {
       >
         <p>
           <strong>
-            @{comment.userid ? comment.userid?.username : "noname"}
+            @{comment.userid ? comment.userid?.username : "[deleted]"}
           </strong>{" "}
           <i style={{ fontSize: "12px" }}>
             {" "}
@@ -58,7 +63,7 @@ const Commentsection = ({ movie, selected }) => {
           {user && comment.userid && comment.userid._id === user.userid ? (
             <button
               onClick={() => {
-                handleDelete(comment._id);
+                handleDelete(comment._id, comment.children.length);
               }}
             >
               delete
@@ -70,7 +75,7 @@ const Commentsection = ({ movie, selected }) => {
           {comment.text}
           {/* <i style={{ color: "red" }}>({comment._id})</i> */}
         </div>
-        {cc === comment._id && view ? (
+        {cc === comment._id && isReplying ? (
           <Reply movie={movie} comment={comment} />
         ) : null}
         <button
@@ -78,7 +83,7 @@ const Commentsection = ({ movie, selected }) => {
             handleReply(comment._id);
           }}
         >
-          {cc === comment._id && view ? "cancel" : "REPLY"}
+          {cc === comment._id && isReplying ? "cancel" : "REPLY"}
         </button>
 
         <br></br>

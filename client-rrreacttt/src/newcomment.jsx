@@ -4,7 +4,7 @@ import { useCommentsContext } from "./hooks/useCommentsContext";
 import { AuthContext } from "./context/AuthContext";
 
 const Newcomment = ({ movie }) => {
-  const { comments, dispatch } = useCommentsContext();
+  const { dispatch } = useCommentsContext();
   const { user } = useContext(AuthContext);
   // const { user } = useContext(AuthContext)
 
@@ -15,7 +15,6 @@ const Newcomment = ({ movie }) => {
   const [parentid, setParentid] = useState("");
   const [movieid, setMovieid] = useState(movie._id);
   const [year, setYear] = useState("");
-  // const [userid, setUserid] = useState("")
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,12 +30,15 @@ const Newcomment = ({ movie }) => {
         },
         body: JSON.stringify(newComment),
       });
+      setText("");
 
       const json = await response.json();
 
-      // dispatch({ type: "create_comment", payload: data })
+      dispatch({ type: "create_comment", payload: json });
+      //error
+
       console.log(json);
-      window.location.reload();
+      //   window.location.reload();
     } else {
       window.alert("please sign in first");
     }
@@ -50,10 +52,9 @@ const Newcomment = ({ movie }) => {
     <>
       <form onSubmit={handleSubmit}>
         <fieldset>
-          <h4>Add a comment</h4>
-
           <textarea
             type="text"
+            placeholder="Add a comment"
             id="text"
             name="text"
             required

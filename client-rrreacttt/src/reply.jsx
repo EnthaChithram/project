@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext";
+import { commentsContext } from "./context/commentscontext";
 
 const Reply = ({ movie, comment }) => {
   const navigate = useNavigate();
@@ -12,24 +13,25 @@ const Reply = ({ movie, comment }) => {
   const [year, setYear] = useState("");
 
   const { user } = useContext(AuthContext);
+  const { dispatch } = useContext(commentsContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newComment = { text, parentid, movieid };
 
-    fetch("http://localhost:3000/newcommentu", {
+    const response = await fetch("http://localhost:3000/newcommentu", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ` + user.token,
       },
       body: JSON.stringify(newComment),
-    }).then(() => {
-      window.location.reload();
     });
 
-    // Check for errors in respon
+    const json = await response.json();
+    dispatch({ type: "reply_off" });
+    dispatch({ type: "create_comment", payload: json });
   };
 
   const neww = (e) => {

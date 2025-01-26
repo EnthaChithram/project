@@ -171,47 +171,53 @@ app.post("/newcommentu", async (req, res) => {
       req.body[key] = null;
     }
   });
-  console.log(req.body);
+
   const { text, parentid, movieid } = req.body;
-  console.log(req.user._id);
+
   const userid = req.user._id;
   try {
     const comment = new Commentu({ text, parentid, movieid, userid });
-    await comment.save();
-    res.status(201).json(req.body);
+    const savedcomment = await comment.save();
+
+    const populatedComment = await Commentu.findById(savedcomment._id)
+      .populate("userid", "username")
+      .lean() //  plain js object lightweighy
+      .exec(); //for promise
+
+    res.status(201).json(populatedComment);
   } catch (error) {
     console.error("Error saving comment:", error);
     res.status(400).json({ error: "Failed to save comment" });
   }
-  // res.redirect("/commentu")
 });
 
 app.delete("/commentu/:id", async (req, res) => {
   try {
-    const id = req.params.id; // Get the ID from the request parameters
+    const id = req.params.id;
 
     const comment = await Commentu.findById(id);
     const children = await Commentu.find({ parentid: id });
 
     if (children.length > 0) {
-      comment.text = "DELETED";
+      comment.text = "[DELETED COMMENT]";
+      comment.userid = null;
       await comment.save();
+      res.status(200).json(id);
     } else {
-      const deletedItem = await Commentu.findByIdAndDelete(id); // Use Mongoose to delete by ID
+      const deletedcomment = await Commentu.findByIdAndDelete(id);
+      console.log(deletedcomment._id);
 
-      if (deletedItem) {
-        res.status(200).json({ message: "Item with id  deleted successfully" });
+      if (deletedcomment) {
+        res.status(200).json(id);
       } else {
         res.status(404).json({ error: "Item with id  not found" });
       }
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: "An error occurred while deleting the item",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "An error occurred while deleting the item",
+      details: error.message,
+    });
   }
 });
 

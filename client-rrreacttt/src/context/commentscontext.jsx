@@ -5,29 +5,49 @@ export const commentsContext = createContext([]);
 export const commentsReducer = (state, action) => {
   switch (action.type) {
     case "set_comments":
-      return {
-        comments: action.payload,
-      };
+      return { ...state, comments: action.payload };
+
     case "create_comment":
-      if (!state.comments.includes(action.payload)) {
-        return {
-          ...state,
-          comments: [...state.comments, action.payload],
-        };
-      }
-
       return {
-        state,
-      }; // Prevent duplicate updates
-
-    // case "set_tasks":
-    //     return {
-    //         tasks: action.payload
-    //     }
-    case "new_task":
-      return {
-        task: [...state.tasks, action.payload],
+        ...state,
+        comments: [action.payload, ...state.comments],
+        isReplying: false,
       };
+
+    case "delete_comment":
+      return {
+        ...state,
+        comments: state.comments.filter(
+          (comment) => comment._id !== action.payload
+        ),
+      };
+
+    case "update":
+      return {
+        ...state,
+        comments: state.comments.map((comment) =>
+          comment._id === action.payload
+            ? {
+                ...comment,
+                text: "[DELETED COMMENT]",
+                userid: { ...comment.userid, username: "[DELETED]" },
+              }
+            : comment
+        ),
+      };
+
+    case "reply_on":
+      return {
+        ...state,
+        isReplying: true,
+      };
+
+    case "reply_off":
+      return {
+        ...state,
+        isReplying: false,
+      };
+
     default:
       return state;
   }
@@ -36,7 +56,7 @@ export const commentsReducer = (state, action) => {
 export const CommentsContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(commentsReducer, {
     comments: [],
-    tasks: ["okok", "nice"],
+    isReplying: false,
   });
 
   return (
