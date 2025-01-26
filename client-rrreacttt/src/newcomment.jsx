@@ -1,7 +1,13 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useCommentsContext } from "./hooks/useCommentsContext";
+import { AuthContext } from "./context/AuthContext";
 
 const Newcomment = (({ movie }) => {
+
+    const { comments, dispatch } = useCommentsContext()
+    const { user } = useContext(AuthContext)
+    // const { user } = useContext(AuthContext)
 
     const navigate = useNavigate()
 
@@ -11,6 +17,7 @@ const Newcomment = (({ movie }) => {
     const [parentid, setParentid] = useState("")
     const [movieid, setMovieid] = useState(movie._id)
     const [year, setYear] = useState("")
+    // const [userid, setUserid] = useState("")
 
 
 
@@ -19,18 +26,28 @@ const Newcomment = (({ movie }) => {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        const newComment = { name, text, parentid, movieid };
 
-        fetch("http://localhost:3000/newcommentu", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newComment)
-        }).then(() => {
-            window.location.reload();
-        })
+        const newComment = { text, parentid, movieid };
 
+        if (user) {
+            const response = await fetch("http://localhost:3000/newcommentu", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ` + user.token
+                },
+                body: JSON.stringify(newComment)
+            })
+
+            const json = await response.json()
+
+            // dispatch({ type: "create_comment", payload: data })
+            console.log(json)
+            window.location.reload()
+        }
+        else {
+            window.alert("please sign in first")
+        }
 
 
     }
@@ -46,17 +63,9 @@ const Newcomment = (({ movie }) => {
             <form onSubmit={handleSubmit}>
                 <fieldset>
                     <h4>Add a comment</h4>
-                    <label>name</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
 
-                    <label>TEXT</label>
+
+
                     <textarea
                         type="text"
                         id="text"
@@ -66,26 +75,17 @@ const Newcomment = (({ movie }) => {
                         onChange={(e) => setText(e.target.value)}>
                     </textarea>
 
-                    {/* <label>parentid</label>
                     <input
-                        type="text"
-                        id="parentid"
+                        type="hidden"
                         name="parentid"
-                        value={parentid}
-                        onChange={(e) => setParentid(e.target.value)}>
-                    </input> */}
+                        value={parentid}>
+                    </input>
 
-                    {/* <label>movieid</label>
                     <input
-                        type="text"
-                        id="movieid"
+                        type="hidden"
                         name="movieid"
-                        required
-                        value={movieid}
-                        onChange={(e) => setMovieid(e.target.value)}>
-                    </input> */}
-
-
+                        value={movieid}>
+                    </input>
 
                     <button type="submit">submit</button>
                 </fieldset>

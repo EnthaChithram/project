@@ -1,24 +1,50 @@
 import { useEffect, useState } from "react";
-import useFetch from "./useFetch";
-import { useParams } from "react-router-dom";
+import useFetch from "./hooks/useFetch";
+import { useParams, useLocation } from 'react-router-dom';
 
 import Commentsection from "./commentsection";
+import { useCommentsContext } from "./hooks/useCommentsContext";
 
 
 const Moviepage = (() => {
     const { id } = useParams();
+    const location = useLocation();
+    const [movie, setMovie] = useState(null)
+    // const [comments, setComments] = useState(null)
+
+    const { comments, dispatch } = useCommentsContext()
+
+
 
     const { Data, loading } = useFetch("http://localhost:3000/movies/" + id)
 
 
-    const { movie, comments } = Data || []
+    // const { movie, comments = [] } = Data || {}
 
 
+    useEffect(() => {
+        if (Data) {
+            const { movie, comments = [] } = Data;
+            setMovie(movie);
+            // const tasks = ["do this", "do that"]
+            dispatch({ type: "set_comments", payload: comments })
+            // dispatch({ type: "set_tasks", payload: tasks })
+            // console.log(tasks)
+
+        }
+    }, [Data]);
+
+
+    if (loading) {
+        return (<div> loading...</div>)
+    }
 
 
     return (
         <>
-            <div>
+            <div className="moviepage" style={{
+                maxWidth: "400px", margin: "30px auto", textAlign: "center"
+            }}>
                 {loading ? (<h1>LOADING...</h1>) : (movie ? (
 
                     <>
@@ -30,7 +56,9 @@ const Moviepage = (() => {
 
             </div>
 
-            {comments && movie && <Commentsection comments={comments} movie={movie} />}
+            {comments && movie && <Commentsection comments={comments} movie={movie} selected="678ab7100ffa713184930be2" />}
+
+
 
         </>
     )

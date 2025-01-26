@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { AuthContext } from "./context/AuthContext"
 
 const Reply = (({ movie, comment }) => {
 
@@ -11,17 +12,20 @@ const Reply = (({ movie, comment }) => {
     const [movieid, setMovieid] = useState(movie._id)
     const [year, setYear] = useState("")
 
+    const { user } = useContext(AuthContext)
+
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const newComment = { name, text, parentid, movieid };
+        const newComment = { text, parentid, movieid };
 
         fetch("http://localhost:3000/newcommentu", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ` + user.token
             },
             body: JSON.stringify(newComment)
         }).then(() => {
@@ -39,17 +43,6 @@ const Reply = (({ movie, comment }) => {
     return (
         <form onSubmit={handleSubmit}>
 
-            <label>name</label>
-            <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-            />
-
-            <label>TEXT</label>
             <textarea
                 type="text"
                 id="text"
@@ -59,28 +52,22 @@ const Reply = (({ movie, comment }) => {
                 onChange={(e) => setText(e.target.value)}>
             </textarea>
 
-            {/* <label>parentid</label>
-                <input
-                    type="text"
-                    id="parentid"
-                    name="parentid"
-                    value={parentid}
-                    onChange={(e) => setParentid(e.target.value)}>
-                </input> */}
 
-            {/* <label>movieid</label>
-                <input
-                    type="text"
-                    id="movieid"
-                    name="movieid"
-                    required
-                    value={movieid}
-                    onChange={(e) => setMovieid(e.target.value)}>
-                </input> */}
+            <input
+                type="hidden"
+                name="parentid"
+                value={parentid}
+            >
+            </input>
 
+            <input
+                type="hidden"
+                name="movieid"
+                value={movieid}
+            >
+            </input>
 
-
-            <button type="submit">submit</button>
+            <button type="submit">reply</button>
 
 
         </form>

@@ -1,9 +1,16 @@
-#root {
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
+} */
+
+/* .moviepage {
+  max-width: 400px;
+  margin: 30px auto;
+  text-align: center;
+  background-color: black;
+} */
 
 .logo {
   height: 6em;

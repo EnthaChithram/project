@@ -5,23 +5,34 @@
   margin: 0;
   font-family: "Quicksand";
 }
+
+/* html {
+  background-color: #0e1113;
+  color: white;
+  
+} */
 .navbar {
   padding: 20px;
   display: flex;
   align-items: center;
-  max-width: 600px;
-  margin: 0 auto;
+  justify-content: center;
+  /* max-width: 600px; */
+  margin: 0;
   border-bottom: 1px solid #f2f2f2;
+
+  overflow: visible;
 }
 .navbar h1 {
-  color: #f1356d;
+  color: black;
 }
+
 .navbar .links {
   margin-left: auto;
 }
 .navbar a {
-  margin-left: 16px;
+  /* margin-left: 16px; */
   text-decoration: none;
+  color: green;
   padding: 6px;
 }
 .navbar a:hover {
