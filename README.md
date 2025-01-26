@@ -2,6 +2,4 @@
  
 (project from resume)
 
-CSS yet to be implemented
-
-user authentication yet to be implemented
+no CSS yet
