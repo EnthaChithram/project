@@ -1,204 +1,180 @@
 // import { createRequire } from "module";
 // const require = createRequire(import.meta.url);
 const express = require("express");
-require('dotenv').config();
+require("dotenv").config();
 
 const app = express();
 const mongoose = require("mongoose");
-const Commentu = require("./models/commentu")
-const Movie = require("./models/movie")
-const User = require("./models/user")
-const List = require("./models/list")
+const Commentu = require("./models/commentu");
+const Movie = require("./models/movie");
+const User = require("./models/user");
+const List = require("./models/list");
 
-const cors = require('cors');
-app.use(cors({ origin: '*' }))
-const jwt = require("jsonwebtoken")
-const requireAuth = require("./middleware/requireAuth.js")
+const cors = require("cors");
+app.use(cors({ origin: "*" }));
+const jwt = require("jsonwebtoken");
+const requireAuth = require("./middleware/requireAuth.js");
 
-
-const createToken = ((_id) => {
-  return jwt.sign({ _id }, process.env.SECRET)
-})
-
-
-
+const createToken = (_id) => {
+  return jwt.sign({ _id }, process.env.SECRET);
+};
 
 // const corsOptions = {
-//   origin: '*', 
+//   origin: '*',
 // };
 // app.use(cors(corsOptions));
-
-
 
 const dbURL = process.env.MONGO_DB;
 
 mongoose.connect(dbURL).then(() => {
-  console.log("mongo connected")
+  console.log("mongo connected");
 });
 
 app.set("view engine", "ejs");
-app.use(express.static('public'));
+app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 console.log("kjj");
 
 app.listen(3000);
 
-
-
 app.post("/signup", async (req, res) => {
-  const { username, password } = req.body
-  console.log(username, password)
+  const { username, password } = req.body;
+  console.log(username, password);
 
   try {
-    const user = await User.signup(username, password)
-    const token = createToken(user._id)
+    const user = await User.signup(username, password);
+    const token = createToken(user._id);
     const userid = user._id;
 
-    res.status(200).json({ username, userid, token })
+    res.status(200).json({ username, userid, token });
   } catch (error) {
-    res.status(400).json({ error: error.message })
+    res.status(400).json({ error: error.message });
   }
-})
+});
 
 app.post("/login", async (req, res) => {
-  const { username, password } = req.body
-  console.log(username, password)
+  const { username, password } = req.body;
+  console.log(username, password);
 
   try {
-    const user = await User.login(username, password)
-    const token = createToken(user._id)
+    const user = await User.login(username, password);
+    const token = createToken(user._id);
     const userid = user._id;
 
-    res.status(200).json({ username, userid, token, message: "logged in" })
+    res.status(200).json({ username, userid, token, message: "logged in" });
   } catch (error) {
-    res.status(400).json({ error: error.message })
-    console.log(error)
-    console.log(error.message)
+    res.status(400).json({ error: error.message });
+    console.log(error);
+    console.log(error.message);
   }
-})
-
-
-
+});
 
 app.get("/", (req, res) => {
   Blog.find().then((result) => {
     res.render("blogs", { blogs: result });
-
-  })
-
+  });
 });
-
 
 //--------------forms--------------//
 
-
-
 app.get("/commentu", (req, res) => {
   res.render("newcommentu");
-})
+});
 
 app.get("/newmovie", (req, res) => {
   res.render("movies");
-})
+});
 
 app.get("/signup", (req, res) => {
   res.render("newuser");
-})
-
-
+});
 
 //-----------get reqs-----------//
 
-
 app.get("/users", async (req, res) => {
-
-
   try {
-    const user = await User.find()
+    const user = await User.find();
 
-    res.status(200).json(user)
+    res.status(200).json(user);
   } catch (error) {
-    res.status(400).json({ error: error.message })
+    res.status(400).json({ error: error.message });
   }
-})
+});
 
 app.get("/user/:id", async (req, res) => {
-
-
   try {
-    const user = await User.findById(req.params.id)
-    const comments = await Commentu.find({ userid: req.params.id }).populate('movieid', 'name').lean().exec();
+    const user = await User.findById(req.params.id);
+    const comments = await Commentu.find({ userid: req.params.id })
+      .populate("movieid", "name")
+      .lean()
+      .exec();
 
-    res.status(200).json({ user, comments })
+    res.status(200).json({ user, comments });
   } catch (error) {
-    res.status(400).json({ error: error.message })
+    res.status(400).json({ error: error.message });
   }
-})
+});
 
 app.get("/commentu/:id", async (req, res) => {
   let all = [];
-  all.push(await Commentu.findById(req.params.id))
+  all.push(await Commentu.findById(req.params.id));
 
   const findchildren = async (parentid) => {
-    const children = await Commentu.find({ parentid: parentid })
-    all.push(...children)
+    const children = await Commentu.find({ parentid: parentid });
+    all.push(...children);
 
     for (const child of children) {
-      await findchildren(child._id)
+      await findchildren(child._id);
     }
-  }
-  await findchildren(req.params.id)
-  res.json(all)
-  console.log(all)
-})
+  };
+  await findchildren(req.params.id);
+  res.json(all);
+  console.log(all);
+});
 
 app.get("/movies", (req, res) => {
-  console.log(req)
-  console.log(req.body)
+  console.log(req);
+  console.log(req.body);
 
   try {
     Movie.find().then((result) => {
-      res.status(201).json(result)
-    })
+      res.status(201).json(result);
+    });
   } catch (error) {
-    res.status(400).json("server error:: ")
+    res.status(400).json("server error:: ");
   }
 });
 
 app.get("/movies/:id", async (req, res) => {
-
-
   try {
-    const movie = await Movie.findById(req.params.id)
-    const comments = await Commentu.find({ movieid: req.params.id }).populate('userid', 'username').lean().exec();
-    res.json({ movie, comments })
-
+    const movie = await Movie.findById(req.params.id);
+    const comments = await Commentu.find({ movieid: req.params.id })
+      .populate("userid", "username")
+      .lean()
+      .exec();
+    res.json({ movie, comments });
   } catch (error) {
-    res.status(400).json({ error })
-    console.log(error)
+    res.status(400).json({ error });
+    console.log(error);
   }
 });
 
 ////////////spam///////////////////
 
-
-
-app.use(requireAuth)
-
+app.use(requireAuth);
 
 app.post("/newcommentu", async (req, res) => {
-
-  console.log("requst recvd")
-  Object.keys(req.body).forEach(key => {
+  console.log("requst recvd");
+  Object.keys(req.body).forEach((key) => {
     if (req.body[key] === "") {
       req.body[key] = null;
     }
-  })
-  console.log(req.body)
+  });
+  console.log(req.body);
   const { text, parentid, movieid } = req.body;
-  console.log(req.user._id)
-  const userid = req.user._id
+  console.log(req.user._id);
+  const userid = req.user._id;
   try {
     const comment = new Commentu({ text, parentid, movieid, userid });
     await comment.save();
@@ -208,10 +184,9 @@ app.post("/newcommentu", async (req, res) => {
     res.status(400).json({ error: "Failed to save comment" });
   }
   // res.redirect("/commentu")
-})
+});
 
-
-app.delete('/commentu/:id', async (req, res) => {
+app.delete("/commentu/:id", async (req, res) => {
   try {
     const id = req.params.id; // Get the ID from the request parameters
 
@@ -219,10 +194,9 @@ app.delete('/commentu/:id', async (req, res) => {
     const children = await Commentu.find({ parentid: id });
 
     if (children.length > 0) {
-      comment.text = "DELETED"
+      comment.text = "DELETED";
       await comment.save();
-    }
-    else {
+    } else {
       const deletedItem = await Commentu.findByIdAndDelete(id); // Use Mongoose to delete by ID
 
       if (deletedItem) {
@@ -231,16 +205,18 @@ app.delete('/commentu/:id', async (req, res) => {
         res.status(404).json({ error: "Item with id  not found" });
       }
     }
-
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while deleting the item', details: error.message });
+    res
+      .status(500)
+      .json({
+        error: "An error occurred while deleting the item",
+        details: error.message,
+      });
   }
 });
 
-
 app.post("/newmovie", async (req, res) => {
   const { name, year } = req.body;
-
 
   if (!name || !year) {
     return res.status(400).json({ error: "Name and year are required" });
@@ -256,17 +232,10 @@ app.post("/newmovie", async (req, res) => {
   }
 });
 
-
-
-
-
 /////////-----//////////
 
 app.post("/newlist", async (req, res) => {
   const { name, number } = req.body;
-
-
-
 
   try {
     const item = new List({ name, number });
@@ -278,38 +247,14 @@ app.post("/newlist", async (req, res) => {
   }
 });
 
-
 app.get("/list", (req, res) => {
-  console.log(req)
-
+  console.log(req);
 
   try {
     List.find().then((result) => {
-      res.status(201).json(result)
-    })
+      res.status(201).json(result);
+    });
   } catch (error) {
-    res.status(400).json("server error:: ")
+    res.status(400).json("server error:: ");
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

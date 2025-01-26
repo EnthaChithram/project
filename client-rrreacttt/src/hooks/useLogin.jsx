@@ -1,42 +1,40 @@
-import { useContext, useState } from "react"
-import { AuthContext } from "../context/AuthContext"
+import { useContext, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
 
-export const useLogin = (() => {
-    const [error, setError] = useState(null)
-    const [loading, setLoading] = useState(null)
-    const [message, setMessage] = useState(null)
-    const { dispatch } = useContext(AuthContext)
+export const useLogin = () => {
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(null);
+  const [message, setMessage] = useState(null);
+  const { dispatch } = useContext(AuthContext);
 
+  const login = async (username, password) => {
+    setLoading(true);
+    setError(null);
+    setMessage(null);
 
-    const login = async (username, password) => {
-        setLoading(true)
-        setError(null)
-        setMessage(null)
+    const response = await fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    });
 
-        const response = await fetch("http://localhost:3000/login", {
-            method: "POST",
-            headers: {
-                "content-type": "application/json",
-            },
-            body: JSON.stringify({ username, password })
-        })
-
-        const json = await response.json()
-        if (!response.ok) {
-            setLoading(false)
-            setError(json.error)
-            setMessage(json)
-        }
-
-        if (response.ok) {
-            localStorage.setItem("user", JSON.stringify(json))
-
-            dispatch({ type: "LOGIN", payload: json })
-            setMessage(json)
-            setLoading(false)
-        }
-
+    const json = await response.json();
+    if (!response.ok) {
+      setLoading(false);
+      setError(json.error);
+      setMessage(json);
     }
 
-    return { loading, error, login, message }
-})
+    if (response.ok) {
+      localStorage.setItem("user", JSON.stringify(json));
+
+      dispatch({ type: "LOGIN", payload: json });
+      setMessage(json);
+      setLoading(false);
+    }
+  };
+
+  return { loading, error, login, message };
+};

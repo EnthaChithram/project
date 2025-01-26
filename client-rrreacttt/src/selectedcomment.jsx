@@ -3,49 +3,51 @@ import Commentsection from "./commentsection";
 import { useEffect, useState } from "react";
 import useFetch from "./hooks/useFetch";
 
+const Selectedcomment = () => {
+  const { id } = useParams();
+  const [movieid, setMovieid] = useState(null);
 
-const Selectedcomment = (() => {
-    const { id } = useParams();
-    const [movieid, setMovieid] = useState(null)
+  useEffect(() => {
+    fetch("http://localhost:3000/commentu/" + id)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setMovieid(data[0].movieid);
+      });
+  }, [id]);
+  console.log(movieid);
 
-    useEffect(() => {
-        fetch("http://localhost:3000/commentu/" + id).then((res) => {
-            return res.json()
-        }).then(data => {
-            setMovieid(data[0].movieid)
+  const { Data, loading } = useFetch(
+    movieid ? "http://localhost:3000/movies/" + movieid : null
+  );
 
-        })
-    }, [id])
-    console.log(movieid)
+  const { movie, comments = [] } = Data || {};
 
-    const { Data, loading } = useFetch(movieid ? "http://localhost:3000/movies/" + movieid : null)
+  useEffect(() => {
+    console.log("Updated movieid:", movieid);
+  }, [movieid]);
 
+  return (
+    <>
+      <div>
+        {loading ? (
+          <h1>LOADING...</h1>
+        ) : movie ? (
+          <>
+            <h1>{movie.name}</h1>
+            <h4>{movie.year}</h4>
+          </>
+        ) : (
+          <h1>NOT FOUND</h1>
+        )}
+      </div>
 
-    const { movie, comments = [] } = Data || {}
+      {comments && movie && (
+        <Commentsection comments={comments} movie={movie} selected={id} />
+      )}
+    </>
+  );
+};
 
-    useEffect(() => {
-        console.log("Updated movieid:", movieid);
-    }, [movieid]);
-
-    return (
-        <>
-            <div>
-                {loading ? (<h1>LOADING...</h1>) : (movie ? (
-
-                    <>
-                        <h1>{movie.name}</h1>
-                        <h4>{movie.year}</h4>
-                    </>
-
-                ) : (<h1>NOT FOUND</h1>))}
-
-            </div>
-
-            {comments && movie && <Commentsection comments={comments} movie={movie} selected={id} />}
-
-        </>
-
-    )
-})
-
-export default Selectedcomment
+export default Selectedcomment;

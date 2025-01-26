@@ -1,17 +1,13 @@
-import { useContext } from "react"
-import { AuthContext } from "./context/AuthContext"
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
 
-export const Loading = (() => {
+export const Loading = () => {
+  const { authError } = useContext(AuthContext);
 
-    const { authError } = useContext(AuthContext)
-
-    return (
-        <>
-            <div>LOADING.....</div>
-            {authError && (<h1>{authError}</h1>)}
-        </>
-    )
-
-
-
-})
+  return (
+    <>
+      <div>LOADING.....</div>
+      {authError && <h1>{authError}</h1>}
+    </>
+  );
+};

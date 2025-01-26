@@ -4,23 +4,18 @@ const useFetch = (url) => {
   const [loading, SetLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [Data, SetData] = useState([
-
-  ]);
-
-
-
+  const [Data, SetData] = useState([]);
 
   useEffect(() => {
-
     if (!url) {
-      return
+      return;
     }
     setTimeout(() => {
       fetch(url)
         .then((res) => {
-          if (!res.ok) { // error coming back from server
-            throw Error('Doesnt exist');
+          if (!res.ok) {
+            // error coming back from server
+            throw Error("Doesnt exist");
           }
           return res.json();
         })

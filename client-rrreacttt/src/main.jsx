@@ -7,7 +7,6 @@ import { Colorcontextprovider } from "./context/colorcontext";
 import { ListContextProvider } from "./context/listcontext";
 import { AuthContextProvider } from "./context/AuthContext";
 
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <CommentsContextProvider>
@@ -16,12 +15,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <AuthContextProvider>
             <App />
           </AuthContextProvider>
-
         </ListContextProvider>
-
-
       </Colorcontextprovider>
     </CommentsContextProvider>
-
   </React.StrictMode>
 );

@@ -1,65 +1,55 @@
-const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
-const validator = require('validator');
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    favmovie: { type: String }
-
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  favmovie: { type: String },
 });
 
-
 userSchema.statics.signup = async function (username, password) {
+  if (!username || !password) {
+    throw Error("All fields must be filled");
+  }
 
+  if (!validator.isAlphanumeric(username)) {
+    throw Error("Username must contain only letters and numbers");
+  }
 
-    if (!username || !password) {
-        throw Error('All fields must be filled')
-    }
+  const exists = await this.findOne({ username });
 
-    if (!validator.isAlphanumeric(username)) {
-        throw Error('Username must contain only letters and numbers');
-    }
+  if (exists) {
+    throw Error("username already in use");
+  }
 
-    const exists = await this.findOne({ username })
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
 
-    if (exists) {
-        throw Error('username already in use')
-    }
+  const user = await this.create({ username, password: hash });
 
-    const salt = await bcrypt.genSalt(10)
-    const hash = await bcrypt.hash(password, salt)
-
-    const user = await this.create({ username, password: hash })
-
-    return user
-}
+  return user;
+};
 
 userSchema.statics.login = async function (username, password) {
+  if (!username || !password) {
+    throw Error("All fields must be filled");
+  }
 
-    if (!username || !password) {
-        throw Error('All fields must be filled')
-    }
+  const user = await this.findOne({ username });
 
-    const user = await this.findOne({ username })
+  if (!user) {
+    throw Error("username not found");
+  }
 
-    if (!user) {
-        throw Error('username not found')
-    }
+  const match = await bcrypt.compare(password, user.password);
 
+  if (!match) {
+    throw Error("wrong password");
+  }
 
-
-    const match = await bcrypt.compare(password, user.password)
-
-    if (!match) {
-        throw Error("wrong password")
-    }
-
-    return user
-}
-
-
-
+  return user;
+};
 
 const user = mongoose.model("user", userSchema);
 
