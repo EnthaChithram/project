@@ -29,10 +29,11 @@ export const AuthContextProvider = ({ children }) => {
         state.loading = true
         const user = JSON.parse(localStorage.getItem("user"))
 
-        console.log(state.user)
+
         if (user) {
             dispatch({ type: "LOGIN", payload: user })
             state.loading = false
+
         }
         else {
             state.authError = "no user"
@@ -43,7 +44,7 @@ export const AuthContextProvider = ({ children }) => {
 
     }, [])
 
-
+    console.log("from auth", state.user)
     return (
         <AuthContext.Provider value={{ ...state, dispatch }}>{children}</AuthContext.Provider>
     )
