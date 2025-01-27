@@ -36,7 +36,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 console.log("kjj");
 
-app.listen(3000);
+app.listen(process.env.PORT, () => {
+  console.log("listening to ", process.env.PORT);
+});
 
 app.post("/signup", async (req, res) => {
   const { username, password } = req.body;

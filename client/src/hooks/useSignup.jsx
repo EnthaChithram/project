@@ -11,7 +11,7 @@ export const useSignup = () => {
     setLoading(true);
     setError(null);
 
-    const response = await fetch("http://localhost:3000/signup", {
+    const response = await fetch(import.meta.env.VITE_API_URL + "signup", {
       method: "POST",
       headers: {
         "content-type": "application/json",

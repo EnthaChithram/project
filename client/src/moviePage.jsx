@@ -13,7 +13,9 @@ const Moviepage = () => {
 
   const { comments, dispatch } = useCommentsContext();
 
-  const { Data, loading } = useFetch("http://localhost:3000/movies/" + id);
+  const { Data, loading } = useFetch(
+    import.meta.env.VITE_API_URL + "movies/" + id
+  );
 
   // const { movie, comments = [] } = Data || {}
 

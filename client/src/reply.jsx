@@ -20,7 +20,7 @@ const Reply = ({ movie, comment }) => {
 
     const newComment = { text, parentid, movieid };
 
-    const response = await fetch("http://localhost:3000/newcommentu", {
+    const response = await fetch(import.meta.env.VITE_API_URL + "newcommentu", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -11,7 +11,9 @@ export const MyComments = () => {
     Data = {},
     loading,
     error,
-  } = useFetch(user ? "http://localhost:3000/user/" + user.userid : null);
+  } = useFetch(
+    user ? import.meta.env.VITE_API_URL + "user/" + user.userid : null
+  );
 
   if (!user) {
     return (

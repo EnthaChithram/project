@@ -8,7 +8,7 @@ const Selectedcomment = () => {
   const [movieid, setMovieid] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3000/commentu/" + id)
+    fetch(import.meta.env.VITE_API_URL + "commentu/" + id)
       .then((res) => {
         return res.json();
       })
@@ -19,7 +19,7 @@ const Selectedcomment = () => {
   console.log(movieid);
 
   const { Data, loading } = useFetch(
-    movieid ? "http://localhost:3000/movies/" + movieid : null
+    movieid ? import.meta.env.VITE_API_URL + "movies/" + movieid : null
   );
 
   const { movie, comments = [] } = Data || {};

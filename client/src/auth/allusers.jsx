@@ -12,7 +12,7 @@ const Users = () => {
   const [number, setnumber] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/users")
+    fetch(import.meta.env.VITE_API_URL + "users")
       .then((res) => {
         return res.json();
       })
@@ -20,7 +20,7 @@ const Users = () => {
         setUsers(data);
       });
 
-    fetch("http://localhost:3000/list")
+    fetch(import.meta.env.VITE_API_URL + "list")
       .then((res) => {
         return res.json();
       })
@@ -33,7 +33,7 @@ const Users = () => {
     e.preventDefault();
     const newitem = { name, number };
 
-    fetch("http://localhost:3000/newlist", {
+    fetch(import.meta.env.VITE_API_URL + "newlist", {
       method: "POST",
       headers: {
         "content-type": "application/json",

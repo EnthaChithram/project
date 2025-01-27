@@ -10,7 +10,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
-  "homepage": "https://EnthaChithram.github.io/resume-Movie-Dicussion-site",
+  "homepage": "https://EnthaChithram.github.io/project",
   "dependencies": {
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",

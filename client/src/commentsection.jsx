@@ -31,12 +31,15 @@ const Commentsection = ({ movie, selected }) => {
       dispatch({ type: "update", payload: id });
     }
 
-    const response = await fetch("http://localhost:3000/commentu/" + id, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ` + user.token,
-      },
-    });
+    const response = await fetch(
+      import.meta.env.VITE_API_URL + "commentu/" + id,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ` + user.token,
+        },
+      }
+    );
 
     const json = await response.json();
   };

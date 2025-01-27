@@ -16,7 +16,7 @@ const Spam = () => {
     const newmovie = { name, year };
     console.log(newmovie);
 
-    fetch("http://localhost:3000/newmovie", {
+    fetch("import.meta.env.VITE_API_URLnewmovie", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, year }),

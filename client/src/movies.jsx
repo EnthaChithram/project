@@ -3,7 +3,7 @@ import useFetch from "./hooks/useFetch";
 import { Link } from "react-router-dom";
 
 const Movies = () => {
-  const { Data: movies } = useFetch("http://localhost:3000/movies");
+  const { Data: movies } = useFetch(import.meta.env.VITE_API_URL + "movies");
 
   return (
     <div>
